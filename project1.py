@@ -331,7 +331,7 @@ class User:
           return False
 
         else:
-          cursor.execute('INSERT INTO tags VALUES (?,?);', pid,tag)
+          cursor.execute('INSERT INTO tags VALUES (?,?);', (pid,tag))
           connection.commit()
           return True
 
