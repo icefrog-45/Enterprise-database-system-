@@ -215,7 +215,7 @@ class User:
 
                 #add the user vote history into db
                 cursor.execute('INSERT INTO votes (pid, vno, vdate, uid) VALUES (?,?,?,?);',(pid,vno,vdate,user))
-                print("You just vote the post!")
+                print("You just voted on the post!")
                 connection.commit()
                 return True
             else:
@@ -235,7 +235,7 @@ class User:
         cursor.execute('SELECT qid from answers where pid=?;',pid)
         question_id=cursor.fetchall()
 
-        #get answer of question
+        #get accepted answer of question
         cursor.execute('SELECT theaid from questions where pid=?;',pid)
         ans=cursor.fetchall()
 
@@ -251,7 +251,7 @@ class User:
                 return False
 
         #if selected post is an accepted answer
-        if pid in ans:
+        elif pid in ans:
             print("The selected post is already an accepted answer")
             connection.commit()
             return False
