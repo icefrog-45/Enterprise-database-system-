@@ -232,7 +232,7 @@ class User:
         c = connection.cursor()
 
         #get pid of the question
-        cursor.execute('SELECT qid from answers where pid=?;',pid)
+        cursor.execute('SELECT qid from answers where pid=?;',pid,)
         question_id=cursor.fetchall()
 
         #get accepted answer of question
@@ -665,7 +665,7 @@ def signed_in_block(user):
 
                 elif action.lower() == "accept":
                     if user.get_privileged():
-                        user.mark_Accepted(selected_post.get_pid())
+                        user.markAccepted(selected_post.get_pid())
                     else:
                         print("Action only available to privileged users!\n")
 
