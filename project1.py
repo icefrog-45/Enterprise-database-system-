@@ -115,6 +115,11 @@ class User:
 
         #check if the post is a question,
         #if not, return to previous page with an error message
+        cursor.execute('SELECT pid FROM questions WHERE pid=?;',qid)
+        all_questions = cursor.fetchall()
+        if qid not in all_questions:
+            print("You can only post and answer to a question!")
+            return False
 
         #get all pid in system
         cursor.execute('SELECT pid FROM posts')
