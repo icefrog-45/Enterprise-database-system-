@@ -315,7 +315,7 @@ class User:
         if tag.lower() == 'back':
             return False
 
-        cursor.execute('SELECT tag FROM tags')
+        cursor.execute("""SELECT tag FROM tags WHERE pid=?;""", (pid,))
         tags = cursor.fetchall()
 
         #check if tag already exit
@@ -332,6 +332,7 @@ class User:
 
         else:
           cursor.execute('INSERT INTO tags VALUES (?,?);', (pid,tag))
+          print("You successfully added the tag!")
           connection.commit()
           return True
 
