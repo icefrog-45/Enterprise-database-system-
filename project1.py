@@ -233,7 +233,7 @@ class User:
             return False
 
         #get accepted answer of question
-        cursor.execute('SELECT theaid from questions where pid=:pid;', {'pid':pid},)
+        cursor.execute('SELECT theaid from questions where pid=:pid;', {'pid':question_id[0]},)
         ans=cursor.fetchone()
 
         #no accepted answer
@@ -249,8 +249,8 @@ class User:
                 return False
 
         #if selected post is an accepted answer
-        elif pid in ans:
-            print("The selected post is already an accepted answer")
+        elif pid == ans[0]:
+            print("The selected post is already an accepted answer!")
             connection.commit()
             return False
 
