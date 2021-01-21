@@ -227,17 +227,20 @@ class User:
 
         #get pid of the question
         cursor.execute('SELECT qid from answers where pid=:pid;', {'pid':pid},)
-        question_id=cursor.fetchall()
+        question_id=cursor.fetchone()
+        if question_id == None:
+            print("A question post cannot be marked as an accepted answer!\n")
+            return False
 
         #get accepted answer of question
         cursor.execute('SELECT theaid from questions where pid=:pid;', {'pid':pid},)
-        ans=cursor.fetchall()
+        ans=cursor.fetchone()
 
         #no accepted answer
-        if len(ans)==0:
+        if ans == None:
             a=input("Do you want to set selected post as accepted answer?: (Y/N)")
             if a=='y' or a=='Y':
-                cursor.execute("INSERT INTO questions VALUES (:qid, :pid);", {'qid':question_id, 'pid':pid},)
+                cursor.execute("INSERT INTO questions VALUES (:qid, :pid);", {'qid':question_id[0], 'pid':pid},)
                 connection.commit()
                 return True
             else:
@@ -253,7 +256,7 @@ class User:
         else:
             b=input("The selected post already had an accepted answer, do you want to change it?")
             if b=='y' or b=='Y':
-                cursor.execute("UPDATE questions SET theaid=:pid WHERE pid=:qid;", {'pid':pid, 'qid':question_id},)
+                cursor.execute("UPDATE questions SET theaid=:pid WHERE pid=:qid;", {'pid':pid, 'qid':question_id[0]},)
                 connection.commit()
                 return True
             else:
