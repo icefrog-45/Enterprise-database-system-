@@ -310,18 +310,20 @@ class User:
 
         print("Type 'back' to return to the previous page")
         #ask for tag
-        tag = input("Enter the tag for your post: ")
+        tag = input("Enter the tag for your post: ").lower()
 
         if tag.lower() == 'back':
             return False
 
-        cursor.execute("""SELECT tag FROM tags WHERE pid=?;""", (pid,))
+        cursor.execute("SELECT DISTINCT tag from tags where pid =?;", (pid,))
         tags = cursor.fetchall()
+        for i in tags:
+            i[0].lower()
 
         #check if tag already exit
         already_exit = 1
 
-        if tag not in tags:
+        if (tag,) not in tags:
           already_exit=0
 
         #if tag already exits
