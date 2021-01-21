@@ -115,10 +115,10 @@ class User:
 
         #check if the post is a question,
         #if not, return to previous page with an error message
-        cursor.execute('SELECT pid FROM questions WHERE pid=?;',qid)
-        all_questions = cursor.fetchall()
-        if qid not in all_questions:
-            print("You can only post and answer to a question!")
+        cursor.execute('SELECT pid FROM questions WHERE pid=:qid;', {'qid':qid},)
+        selected_question = cursor.fetchone()
+        if selected_question == None:
+            print("You can only post an answer to a question!\n")
             return False
 
         #get all pid in system
@@ -184,16 +184,10 @@ class User:
         all_pidwithvote = cursor.fetchall()
 
         #check if user already make the vote on the post
-        already_vote=False
-        if pid in all_pidwithvote:
-            #get all user voted on the question
-            cursor.execute('SELECT uid FROM votes WHERE pid=?;',pid)
-            all_uservoted = cursor.fetchall()
-            if user in all_uservoted:
-                already_vote=True
-
-        if already_vote:
-            print("You already voted")
+        cursor.execute('SELECT uid FROM votes WHERE pid=:pid;', {'pid' : pid},)
+        user_vote = cursor.fetchone()
+        if user_vote != None:
+            print("You've already voted on this post!\n")
             connection.commit()
             return False
         else:
@@ -232,11 +226,11 @@ class User:
         c = connection.cursor()
 
         #get pid of the question
-        cursor.execute('SELECT qid from answers where pid=?;',pid,)
+        cursor.execute('SELECT qid from answers where pid=(?);', (pid,))
         question_id=cursor.fetchall()
 
         #get accepted answer of question
-        cursor.execute('SELECT theaid from questions where pid=?;',pid)
+        cursor.execute('SELECT theaid from questions where pid=(?);', (pid,))
         ans=cursor.fetchall()
 
         #no accepted answer
@@ -259,7 +253,7 @@ class User:
         else:
             b=input("The selected post already had an accepted answer, do you want to change it?")
             if b=='y' or b=='Y':
-                cursor.execute("UPDATE questions SET theaid=? WHERE pid =?;",pid, question_id)
+                cursor.execute("UPDATE questions SET theaid=(?) WHERE pid=(?);", pid, question_id)  ########################################## FIXME:
                 connection.commit()
                 return True
             else:
