@@ -250,7 +250,7 @@ class User:
 
         #if selected post is an accepted answer
         elif pid == ans[0]:
-            print("The selected post is already an accepted answer!")
+            print("The selected post is already an accepted answer!\n")
             connection.commit()
             return False
 
