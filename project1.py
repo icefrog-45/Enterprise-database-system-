@@ -240,7 +240,8 @@ class User:
         if ans == None:
             a=input("Do you want to set selected post as accepted answer?: (Y/N)")
             if a=='y' or a=='Y':
-                cursor.execute("INSERT INTO questions VALUES (:qid, :pid);", {'qid':question_id[0], 'pid':pid},)
+                cursor.execute("UPDATE questions SET theaid=:pid WHERE pid=:qid;", {'qid':question_id[0], 'pid':pid},)
+                print("Post {} has now been marked as the accepted answer of question post {}!\n".format(pid, question_id[0]))
                 connection.commit()
                 return True
             else:
